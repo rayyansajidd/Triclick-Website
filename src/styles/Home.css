@@ -3,6 +3,22 @@ html, body {
 }
 
 
+/* ==========================
+   LOADER
+   ========================== */
+.loader-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; 
+}
+.slow-spinner {
+  width: 4rem;
+  height: 4rem;
+
+  animation: spinner-border 3.5s linear infinite;
+}
 
 /* ==========================
    NAVBAR
@@ -1548,5 +1564,4 @@ html, body {
   z-index: 999998;
   transform: translate(-50%, -50%);
   background: rgba(250, 204, 21, 0.441);
-
 }
