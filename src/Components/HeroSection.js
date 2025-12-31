@@ -29,7 +29,7 @@ const HeroSection = () => {
               Brands Worth Sharing
             </h1>
             <p className="hero-subtitle">
-              We don&apos;t do boring. At Triklik, we craft bold digital stories
+              We don&apos;t do boring. At TrikClik, we craft bold digital stories
               that actually get people talking. From social campaigns to brand
               films, everything is built to stand out and deliver results.
             </p>

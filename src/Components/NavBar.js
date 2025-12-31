@@ -10,7 +10,7 @@ const NavBar = () => {
           <span className="logo-mark">
             <img className="logo" src={logo} alt="Logo" />
           </span>
-          <span className="logo-text">TRIKLIK</span>
+          <span className="logo-text">TRIKCLIK</span>
         </a>
 
         <button

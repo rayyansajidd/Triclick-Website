@@ -2,6 +2,7 @@ import "../styles/Home.css";
 import reviewImg from "../assets/dummy"; 
 
 const ReviewSection = () => {
+
   return (
     <section className="review-section">
       <div className="review-content">
@@ -15,7 +16,7 @@ const ReviewSection = () => {
         </p>
 
         <div className="review-actions">
-          <button className="review-btn">Book Now</button>
+         <a href="#contact"> <button className="review-btn">Book Now</button></a>
           <span className="review-trust">⭐ 4.9 Rating · 500+ Clients</span>
         </div>
       </div>

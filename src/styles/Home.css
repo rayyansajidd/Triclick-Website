@@ -1,5 +1,6 @@
 html, body {
   cursor: none;
+  scroll-behavior: smooth;
 }
 
 
@@ -1564,4 +1565,38 @@ html, body {
   z-index: 999998;
   transform: translate(-50%, -50%);
   background: rgba(250, 204, 21, 0.441);
+}
+/* Loader component css  */
+.loader-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffcc00, #ff5ec3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 6px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rotate360 3s linear infinite;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(5px);
+}
+
+.loader-text {
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 2px;
+}
+
+@keyframes rotate360 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

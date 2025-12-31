@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer-section">
       <div className="container footer-container">
         <p className="footer-copy">
-          © {new Date().getFullYear()} Triklik. All rights reserved.
+          © {new Date().getFullYear()} TrikClik. All rights reserved.
         </p>
         <div className="footer-links">
           <a href="#privacy" rel="noopener noreferrer" tabIndex={0}>
