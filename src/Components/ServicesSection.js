@@ -15,7 +15,13 @@ const ServiceCard = ({ title, desc, img }) => {
       </div>
 
       <div className="service-image">
-        <img src={img} alt={title} />
+        <img 
+          src={img} 
+          alt={title} 
+          loading="lazy"
+          width="400"
+          height="300"
+        />
       </div>
     </div>
   );

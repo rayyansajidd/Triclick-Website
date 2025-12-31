@@ -1,5 +1,6 @@
 import "../styles/Home.css";
-import reviewImg from "../assets/dummy"; 
+// Note: reviewImg import removed - image file appears to be invalid
+// If you have a valid image, import it here
 
 const ReviewSection = () => {
 
@@ -22,7 +23,7 @@ const ReviewSection = () => {
       </div>
 
       <div className="review-image">
-        <img src={reviewImg} alt="Happy client illustration" />
+        {/* Image removed - add valid image import when available */}
         <div className="review-glow"></div>
       </div>
     </section>
