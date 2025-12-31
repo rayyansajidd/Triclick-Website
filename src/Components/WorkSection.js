@@ -39,6 +39,7 @@ const SLIDES = [
 
 const WorkSection = () => {
   const [current, setCurrent] = useState(0);
+  const [loadedImages, setLoadedImages] = useState(new Set([0])); // Preload first image
 
   // auto-play every 4 seconds (infinite loop)
   useEffect(() => {
@@ -47,6 +48,18 @@ const WorkSection = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
+
+  // Preload next image when current changes
+  useEffect(() => {
+    const nextIndex = (current + 1) % SLIDES.length;
+    if (!loadedImages.has(nextIndex)) {
+      const img = new Image();
+      img.src = SLIDES[nextIndex].image;
+      img.onload = () => {
+        setLoadedImages((prev) => new Set([...prev, nextIndex]));
+      };
+    }
+  }, [current, loadedImages]);
 
   const goNext = () => setCurrent((prev) => (prev + 1) % SLIDES.length);
   const goPrev = () =>
@@ -94,7 +107,19 @@ const WorkSection = () => {
                       index === current ? "active" : ""
                     }`}
                   >
-                    <img src={slide.image} alt={slide.title} />
+                    {loadedImages.has(index) ? (
+                      <img 
+                        src={slide.image} 
+                        alt={slide.title}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        width="500"
+                        height="650"
+                      />
+                    ) : (
+                      <div style={{ width: '500px', height: '650px', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        Loading...
+                      </div>
+                    )}
                     <div className="work-slide-caption">
                       <p>{slide.title}</p>
                     </div>

@@ -15,6 +15,9 @@ const main = () => {
             className="iimg"
             src={img3}
             alt="GO VIRAL:"
+            loading="lazy"
+            width="600"
+            height="400"
           />
         </div>
         <div className="aboutus" id="aboutus">

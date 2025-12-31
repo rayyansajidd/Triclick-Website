@@ -18,6 +18,9 @@ const HeroSection = () => {
                 src={logo}
                 alt="Creative mannequin"
                 className="img-fluid hero-image floating"
+                fetchPriority="high"
+                width="500"
+                height="500"
               />
             </div>
           </div>

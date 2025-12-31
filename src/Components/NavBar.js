@@ -8,7 +8,14 @@ const NavBar = () => {
       <div className="container">
         <a className="navbar-brand triklik-logo" href="#home">
           <span className="logo-mark">
-            <img className="logo" src={logo} alt="Logo" />
+            <img 
+              className="logo" 
+              src={logo} 
+              alt="Logo" 
+              fetchPriority="high"
+              width="30"
+              height="30"
+            />
           </span>
           <span className="logo-text">TRIKCLIK</span>
         </a>

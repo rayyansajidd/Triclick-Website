@@ -1,18 +1,21 @@
 // src/App.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+// Critical components - load immediately
 import NavBar from "./Components/NavBar";
 import HeroSection from "./Components/HeroSection";
-import ServicesSection from "./Components/ServicesSection";
-import WorkSection from "./Components/WorkSection";
-import ReviewSection from "./Components/ReviewSection";
-import Footer from "./Components/Footer";
-import Main from "./Components/Main";
-import ContactUs from "./Components/ContactUs";
-import CustomCursor from "./Components/CustomCursor";
 import Loader from "./Components/Loader";
+import CustomCursor from "./Components/CustomCursor";
+
+// Below-the-fold components - lazy load
+const Main = lazy(() => import("./Components/Main"));
+const ServicesSection = lazy(() => import("./Components/ServicesSection"));
+const WorkSection = lazy(() => import("./Components/WorkSection"));
+const ReviewSection = lazy(() => import("./Components/ReviewSection"));
+const ContactUs = lazy(() => import("./Components/ContactUs"));
+const Footer = lazy(() => import("./Components/Footer"));
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -38,12 +41,14 @@ const App = () => {
     <>
       <NavBar />
       <HeroSection />
-      <Main />
-      <ServicesSection />
-      <WorkSection />
-      <ReviewSection />
-      <ContactUs />
-      <Footer />
+      <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+        <Main />
+        <ServicesSection />
+        <WorkSection />
+        <ReviewSection />
+        <ContactUs />
+        <Footer />
+      </Suspense>
       <CustomCursor />
     </>
   );
