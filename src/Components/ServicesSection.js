@@ -1,40 +1,39 @@
-import React from "react";
+import React, { memo } from "react";
 import "../styles/Home.css";
 
 import image from "../assets/Digital.png";
 import image1 from "../assets/Web.png";
 import image2 from "../assets/Video.png";
 
-/* 🔹 Service Card Component */
-const ServiceCard = ({ title, desc, img }) => {
+const ServiceCard = memo(({ title, desc, img }) => {
   return (
-    <div className="service-card">
+    <article className="service-card">
       <div className="service-text">
         <h3>{title}</h3>
         <p>{desc}</p>
       </div>
 
       <div className="service-image">
-        <img 
-          src={img} 
-          alt={title} 
+        <img
+          src={img}
+          alt={`${title} service illustration`}
           loading="lazy"
-          width="400"
-          height="300"
+          decoding="async"
+          width={400}
+          height={300}
         />
       </div>
-    </div>
+    </article>
   );
-};
+});
 
-/* 🔹 Main Section */
 const ServicesSection = () => {
   return (
-    <section id="services" className="services-section">
+    <section id="services" className="services-section" aria-labelledby="services-title">
       <div className="services-container">
         <p className="services-eyebrow">OUR SERVICES TO THE</p>
 
-        <h2 className="services-title">
+        <h2 className="services-title" id="services-title">
           <span>TABLE</span>
         </h2>
 
@@ -62,4 +61,4 @@ const ServicesSection = () => {
   );
 };
 
-export default ServicesSection;
+export default memo(ServicesSection);

@@ -3,9 +3,9 @@ import "../styles/Home.css";
 
 export default function Loader() {
   return (
-    <div className="loader-wrapper">
+    <div className="loader-wrapper" aria-busy="true" aria-live="polite">
       <div className="loader-circle">
-        <h1 className="loader-text">Trikclik</h1>
+        <p className="loader-text">Trikclik</p>
       </div>
     </div>
   );

@@ -1,20 +1,20 @@
-import React from "react";
+import React, { memo } from "react";
 import "../styles/Home.css";
 import logo from "../assets/Logo.png";
 
 const NavBar = () => {
   return (
-    <nav className="navbar navbar-expand-lg triklik-navbar">
+    <nav className="navbar navbar-expand-lg triklik-navbar" aria-label="Primary navigation">
       <div className="container">
-        <a className="navbar-brand triklik-logo" href="#home">
+        <a className="navbar-brand triklik-logo" href="#home" aria-label="Go to homepage section">
           <span className="logo-mark">
-            <img 
-              className="logo" 
-              src={logo} 
-              alt="Logo" 
+            <img
+              className="logo"
+              src={logo}
+              alt="TrikClik logo"
               fetchPriority="high"
-              width="30"
-              height="30"
+              width={30}
+              height={30}
             />
           </span>
           <span className="logo-text">TRIKCLIK</span>
@@ -35,7 +35,7 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
             <li className="nav-item">
-              <a className="nav-link nav-link-custom active" href="#home">
+              <a className="nav-link nav-link-custom active" href="#home" aria-current="page">
                 Home
               </a>
             </li>
@@ -45,18 +45,18 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#portfolio">
-                Portfolio
-              </a>
-            </li>
-            <li className="nav-item">
               <a className="nav-link nav-link-custom" href="#services">
                 Services
               </a>
             </li>
             <li className="nav-item">
               <a className="nav-link nav-link-custom" href="#work">
-                Post For Rent
+                Portfolio
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link nav-link-custom" href="#reviews">
+                Reviews
               </a>
             </li>
             <li className="nav-item">
@@ -71,4 +71,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default memo(NavBar);

@@ -1,9 +1,9 @@
-// src/Components/WorkSection.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import "../styles/Home.css";
-import img from "../assets/ph5.png"
-import img1 from "../assets/Latte.png"
-import img2 from "../assets/Lazy6.png"
+import img from "../assets/ph5.png";
+import img1 from "../assets/Latte.png";
+import img2 from "../assets/Lazy6.png";
+
 const SLIDES = [
   {
     id: 1,
@@ -13,35 +13,19 @@ const SLIDES = [
   {
     id: 2,
     image: img1,
-    title: "Latte Coffeessss...",
+    title: "Latte Coffees Campaign",
   },
   {
     id: 3,
     image: img2,
     title: "Lazy6 Clothing",
   },
-  // {
-  //   id: 4,
-  //   image: "https://via.placeholder.com/500x650.png?text=Content+Series+4",
-  //   title: "Creator-Led Content Series",
-  // },
-  // {
-  //   id: 5,
-  //   image: "https://via.placeholder.com/500x650.png?text=Rebrand+5",
-  //   title: "Full Brand Revamp For FMCG",
-  // },
-  // {
-  //   id: 6,
-  //   image: "https://via.placeholder.com/500x650.png?text=Digital+Launch+6",
-  //   title: "Digital-First Product Launch",
-  // },
 ];
 
 const WorkSection = () => {
   const [current, setCurrent] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(new Set([0])); // Preload first image
+  const [loadedImages, setLoadedImages] = useState(new Set([0]));
 
-  // auto-play every 4 seconds (infinite loop)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % SLIDES.length);
@@ -49,30 +33,27 @@ const WorkSection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Preload next image when current changes
   useEffect(() => {
     const nextIndex = (current + 1) % SLIDES.length;
     if (!loadedImages.has(nextIndex)) {
-      const img = new Image();
-      img.src = SLIDES[nextIndex].image;
-      img.onload = () => {
+      const preloadImage = new Image();
+      preloadImage.src = SLIDES[nextIndex].image;
+      preloadImage.onload = () => {
         setLoadedImages((prev) => new Set([...prev, nextIndex]));
       };
     }
   }, [current, loadedImages]);
 
   const goNext = () => setCurrent((prev) => (prev + 1) % SLIDES.length);
-  const goPrev = () =>
-    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  const goPrev = () => setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
 
   return (
-    <section id="work" className="work-section">
+    <section id="work" className="work-section" aria-labelledby="work-heading">
       <div className="container-fluid work-inner">
         <div className="row g-0 align-items-center">
-          {/* LEFT: TEXT BLOCK */}
-          <div className="col-12 col-lg-5">
+          <article className="col-12 col-lg-5">
             <div className="work-copy">
-              <h2 className="work-heading">
+              <h2 className="work-heading" id="work-heading">
                 JUST SOME
                 <br />
                 OF OUR
@@ -81,57 +62,67 @@ const WorkSection = () => {
               </h2>
 
               <p className="work-description">
-                Step into the world of bold ideas and scroll-stopping stories.
-                From national TVCs and digital launches to wild social
-                campaigns, our portfolio shows how we turn brands into
+                Step into the world of bold ideas and scroll-stopping stories. From national TVCs and
+                digital launches to wild social campaigns, our portfolio shows how we turn brands into
                 experiences people remember.
               </p>
               <p className="work-description">
-                Explore the projects to see how we mix strategy, design, and
-                production to create work that actually performs.
+                Explore the projects to see how we mix strategy, design, and production to create work
+                that actually performs.
               </p>
 
-              <button className="btn work-btn">VIEW ALL PROJECTS</button>
+              <button className="btn work-btn" type="button" aria-label="View all projects">
+                VIEW ALL PROJECTS
+              </button>
             </div>
-          </div>
+          </article>
 
-          {/* RIGHT: SLIDER */}
           <div className="col-12 col-lg-7">
-            <div className="work-slider">
-              {/* slides */}
+            <div className="work-slider" aria-label="Portfolio highlights carousel">
               <div className="work-slide-window">
                 {SLIDES.map((slide, index) => (
-                  <div
+                  <article
                     key={slide.id}
-                    className={`work-slide ${
-                      index === current ? "active" : ""
-                    }`}
+                    className={`work-slide ${index === current ? "active" : ""}`}
+                    aria-hidden={index !== current}
                   >
                     {loadedImages.has(index) ? (
-                      <img 
-                        src={slide.image} 
-                        alt={slide.title}
+                      <img
+                        src={slide.image}
+                        alt={`${slide.title} project preview`}
                         loading={index === 0 ? "eager" : "lazy"}
-                        width="500"
-                        height="650"
+                        decoding="async"
+                        width={500}
+                        height={650}
                       />
                     ) : (
-                      <div style={{ width: '500px', height: '650px', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div
+                        style={{
+                          width: "500px",
+                          height: "650px",
+                          backgroundColor: "#f0f0f0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        role="status"
+                        aria-live="polite"
+                      >
                         Loading...
                       </div>
                     )}
                     <div className="work-slide-caption">
-                      <p>{slide.title}</p>
+                      <h3>{slide.title}</h3>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
 
-              {/* arrows */}
               <button
                 className="work-nav-btn work-nav-left"
                 type="button"
                 onClick={goPrev}
+                aria-label="Show previous project"
               >
                 ‹
               </button>
@@ -139,20 +130,21 @@ const WorkSection = () => {
                 className="work-nav-btn work-nav-right"
                 type="button"
                 onClick={goNext}
+                aria-label="Show next project"
               >
                 ›
               </button>
 
-              {/* dots */}
-              <div className="work-dots">
+              <div className="work-dots" role="tablist" aria-label="Carousel slide selectors">
                 {SLIDES.map((slide, index) => (
                   <button
                     key={slide.id}
                     type="button"
-                    className={`work-dot ${
-                      index === current ? "active" : ""
-                    }`}
+                    className={`work-dot ${index === current ? "active" : ""}`}
                     onClick={() => setCurrent(index)}
+                    aria-label={`Show ${slide.title}`}
+                    aria-selected={index === current}
+                    role="tab"
                   />
                 ))}
               </div>
@@ -164,4 +156,4 @@ const WorkSection = () => {
   );
 };
 
-export default WorkSection;
+export default memo(WorkSection);

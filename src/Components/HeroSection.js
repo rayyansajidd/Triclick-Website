@@ -1,10 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import "../styles/Home.css";
 import logo from "../assets/dance.png";
 
 const HeroSection = () => {
   return (
-    <section id="home" className="hero-section">
+    <section id="home" className="hero-section" aria-labelledby="hero-title">
       <div className="container hero-inner">
         <div className="row align-items-center">
           <div className="col-lg-5 text-center mb-4 mb-lg-0">
@@ -16,27 +16,27 @@ const HeroSection = () => {
             >
               <img
                 src={logo}
-                alt="Creative mannequin"
+                alt="Stylized mannequin representing creative brand storytelling"
                 className="img-fluid hero-image floating"
                 fetchPriority="high"
-                width="500"
-                height="500"
+                decoding="async"
+                width={500}
+                height={500}
               />
             </div>
           </div>
 
           <div className="col-lg-7" data-aos="zoom-out-down">
             <p className="hero-tagline">TRADITIONAL IS NOT OUR THING</p>
-            <h1 className="hero-title">
-              <span className="highlight-pink">We Create</span> Stories For
-              Brands Worth Sharing
+            <h1 className="hero-title" id="hero-title">
+              <span className="highlight-pink">We Create</span> Stories For Brands Worth Sharing
             </h1>
             <p className="hero-subtitle">
-              We don&apos;t do boring. At TrikClik, we craft bold digital stories
-              that actually get people talking. From social campaigns to brand
-              films, everything is built to stand out and deliver results.
+              We don&apos;t do boring. At TrikClik, we craft bold digital stories that actually get
+              people talking. From social campaigns to brand films, everything is built to stand out
+              and deliver results.
             </p>
-            <a href="#aboutus" className="btn hero-btn">
+            <a href="#about" className="btn hero-btn" aria-label="Go to About Us section">
               About Us
             </a>
           </div>
@@ -46,4 +46,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default memo(HeroSection);

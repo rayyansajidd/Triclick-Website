@@ -3,6 +3,21 @@ html, body {
   scroll-behavior: smooth;
 }
 
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #111827;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  z-index: 1000000;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
 
 /* ==========================
    LOADER
@@ -12,7 +27,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff; 
+  background-color: #ffffff;
 }
 .slow-spinner {
   width: 4rem;
@@ -402,22 +417,6 @@ html, body {
 }
 
 /* ==========================
-   GENERIC SECTION STYLES
-   ========================== */
-
-.section-eyebrow {
-  font-size: 0.9rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: #6b7280;
-}
-
-.section-title {
-  font-size: 2.1rem;
-  font-weight: 800;
-}
-/* ==========================
    Main
    ========================== */
 .main {
@@ -498,6 +497,7 @@ html, body {
   padding: 0.7rem 2.2rem;
   width: auto;
   max-width: 100%;
+  text-decoration: none;
 }
 
 .about-btn:hover {
@@ -507,6 +507,7 @@ html, body {
     -6px 0 15px rgba(255, 255, 255, 0.6),
     6px 0 15px rgba(255, 255, 255, 0.6);
   transform: translateY(-2px);
+  color: #ffffff;
 }
 
 /* ==========================
@@ -890,6 +891,12 @@ html, body {
   letter-spacing: 0.05em;
 }
 
+.work-slide-caption h3 {
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 600;
+}
+
 /* arrows */
 .work-nav-btn {
   position: absolute;
@@ -1053,13 +1060,15 @@ html, body {
   border-radius: 26px;
   font-size: 0.95rem;
   font-weight: 500;
-  /* cursor: pointer; */
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .review-btn:hover {
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.22);
+  color: #fff;
 }
 
 /* ANIMATIONS */
@@ -1562,6 +1571,19 @@ html, body {
   transform: translate(-50%, -50%);
   background: rgba(250, 204, 21, 0.441);
 }
+
+@media (hover: none), (pointer: coarse) {
+  html,
+  body {
+    cursor: auto;
+  }
+
+  .custom-cursor-dot,
+  .custom-cursor-circle {
+    display: none;
+  }
+}
+
 /* Loader component css  */
 .loader-wrapper {
   width: 100vw;
@@ -1590,6 +1612,7 @@ html, body {
   font-weight: 800;
   color: white;
   letter-spacing: 2px;
+  margin: 0;
 }
 
 @keyframes rotate360 {
