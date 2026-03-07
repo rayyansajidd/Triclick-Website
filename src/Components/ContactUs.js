@@ -19,7 +19,9 @@ const ContactUs = () => {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
 
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    else if (!/^\d+$/.test(formData.phone)) newErrors.phone = "Phone must be numeric";
+    else if (!/^[\d\s\-+()]+$/.test(formData.phone) || formData.phone.replace(/\D/g, "").length < 10) {
+      newErrors.phone = "Enter a valid phone number (at least 10 digits)";
+    }
 
     if (!formData.message.trim()) newErrors.message = "Message is required";
 
@@ -31,100 +33,131 @@ const ContactUs = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const [submitted, setSubmitted] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      alert("Form submitted successfully!");
+      setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", message: "" });
       setErrors({});
+      setTimeout(() => setSubmitted(false), 5000);
     }
   };
 
   return (
     <section className="contact-section" id="contact" aria-labelledby="contact-title">
       <div className="contact-container">
-        <h2 className="contact-title" id="contact-title">
-          Get in Touch
-        </h2>
+        <header className="contact-header">
+          <h2 className="contact-title" id="contact-title">
+            Get in Touch
+          </h2>
+          <p className="contact-subtitle">
+            Have a project in mind or want to collaborate? Send us a message and we’ll get back to you shortly.
+          </p>
+        </header>
 
         <form className="contact-form" onSubmit={handleSubmit} noValidate aria-label="Contact form">
-          <label htmlFor="contact-name">Name</label>
-          <input
-            id="contact-name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={errors.name ? "error-input" : ""}
-            placeholder="Your full name"
-            autoComplete="name"
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={errors.name ? "contact-name-error" : undefined}
-          />
-          {errors.name && (
-            <span id="contact-name-error" className="error-msg">
-              {errors.name}
-            </span>
-          )}
+          <div className="contact-form-row">
+            <div className="contact-field">
+              <label htmlFor="contact-name">
+                Full name <span className="required-dot" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={errors.name ? "error-input" : ""}
+                placeholder="e.g. John Smith"
+                autoComplete="name"
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={errors.name ? "contact-name-error" : undefined}
+              />
+              {errors.name && (
+                <span id="contact-name-error" className="error-msg" role="alert">
+                  {errors.name}
+                </span>
+              )}
+            </div>
+            <div className="contact-field">
+              <label htmlFor="contact-email">
+                Email address <span className="required-dot" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={errors.email ? "error-input" : ""}
+                placeholder="e.g. john@company.com"
+                autoComplete="email"
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "contact-email-error" : undefined}
+              />
+              {errors.email && (
+                <span id="contact-email-error" className="error-msg" role="alert">
+                  {errors.email}
+                </span>
+              )}
+            </div>
+          </div>
 
-          <label htmlFor="contact-email">Email</label>
-          <input
-            id="contact-email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? "error-input" : ""}
-            placeholder="you@example.com"
-            autoComplete="email"
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "contact-email-error" : undefined}
-          />
-          {errors.email && (
-            <span id="contact-email-error" className="error-msg">
-              {errors.email}
-            </span>
-          )}
+          <div className="contact-field">
+            <label htmlFor="contact-phone">
+              Phone number <span className="required-dot" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="contact-phone"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className={errors.phone ? "error-input" : ""}
+              placeholder="e.g. +1 (555) 000-0000"
+              autoComplete="tel"
+              aria-invalid={Boolean(errors.phone)}
+              aria-describedby={errors.phone ? "contact-phone-error" : undefined}
+            />
+            {errors.phone && (
+              <span id="contact-phone-error" className="error-msg" role="alert">
+                {errors.phone}
+              </span>
+            )}
+          </div>
 
-          <label htmlFor="contact-phone">Phone</label>
-          <input
-            id="contact-phone"
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className={errors.phone ? "error-input" : ""}
-            placeholder="1234567890"
-            autoComplete="tel"
-            aria-invalid={Boolean(errors.phone)}
-            aria-describedby={errors.phone ? "contact-phone-error" : undefined}
-          />
-          {errors.phone && (
-            <span id="contact-phone-error" className="error-msg">
-              {errors.phone}
-            </span>
-          )}
+          <div className="contact-field">
+            <label htmlFor="contact-message">
+              Message <span className="required-dot" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="contact-message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              className={errors.message ? "error-input" : ""}
+              placeholder="Tell us about your project or how we can help..."
+              rows="5"
+              aria-invalid={Boolean(errors.message)}
+              aria-describedby={errors.message ? "contact-message-error" : undefined}
+            />
+            {errors.message && (
+              <span id="contact-message-error" className="error-msg" role="alert">
+                {errors.message}
+              </span>
+            )}
+          </div>
 
-          <label htmlFor="contact-message">Message</label>
-          <textarea
-            id="contact-message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            className={errors.message ? "error-input" : ""}
-            placeholder="Write your message here..."
-            rows="4"
-            aria-invalid={Boolean(errors.message)}
-            aria-describedby={errors.message ? "contact-message-error" : undefined}
-          />
-          {errors.message && (
-            <span id="contact-message-error" className="error-msg">
-              {errors.message}
-            </span>
+          {submitted && (
+            <p className="contact-success" role="status">
+              Thank you. Your message has been sent. We’ll be in touch soon.
+            </p>
           )}
 
           <button type="submit" className="contact-btn" aria-label="Send message">
-            Send Message
+            Send message
           </button>
         </form>
       </div>
