@@ -1,23 +1,57 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect, useRef } from "react";
 import "../styles/Home.css";
 import logo from "../assets/Logo.png";
 
 const NavBar = () => {
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const current = window.scrollY;
+      if (current <= 0) {
+        setHidden(false);
+      } else if (current > lastScrollY.current) {
+        setHidden(false);
+      } else {
+        setHidden(true);
+      }
+      lastScrollY.current = current;
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <nav className="navbar navbar-expand-lg triklik-navbar" aria-label="Primary navigation">
+    <nav
+      className={`navbar navbar-expand-lg triklik-navbar${hidden ? " triklik-navbar--hidden" : ""}`}
+      aria-label="Primary navigation"
+    >
       <div className="container">
-        <a className="navbar-brand triklik-logo" href="#home" aria-label="Go to homepage section">
+        <a className="navbar-brand triklik-logo" href="#home" aria-label="TrikClik – back to top">
           <span className="logo-mark">
             <img
               className="logo"
               src={logo}
-              alt="TrikClik logo"
+              alt=""
               fetchPriority="high"
-              width={30}
-              height={30}
+              width={32}
+              height={32}
             />
           </span>
-          <span className="logo-text">TRIKCLIK</span>
+          <span className="logo-text">TrikClik</span>
         </a>
 
         <button
