@@ -1,103 +1,88 @@
-import React, { memo, useState, useEffect, useRef } from "react";
+import React, { memo } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Home.css";
 import logo from "../assets/Logo.png";
 
 const NavBar = () => {
-  const [hidden, setHidden] = useState(false);
-  const lastScrollY = useRef(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const current = window.scrollY;
-      if (current <= 0) {
-        setHidden(false);
-      } else if (current > lastScrollY.current) {
-        setHidden(false);
-      } else {
-        setHidden(true);
-      }
-      lastScrollY.current = current;
-    };
+  // 🔥 Smooth scroll handler
+  const handleScroll = (id) => {
+    if (location.pathname !== "/") {
+      navigate("/"); // go to home first
 
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+      // wait for DOM to render then scroll
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <nav
-      className={`navbar navbar-expand-lg triklik-navbar${hidden ? " triklik-navbar--hidden" : ""}`}
-      aria-label="Primary navigation"
-    >
+    <nav className="navbar navbar-expand-lg triklik-navbar">
       <div className="container">
-        <a className="navbar-brand triklik-logo" href="#home" aria-label="TrikClik – back to top">
+
+        {/* ✅ Logo → route without reload */}
+        <Link className="navbar-brand triklik-logo" to="/">
           <span className="logo-mark">
-            <img
-              className="logo"
-              src={logo}
-              alt=""
-              fetchPriority="high"
-              width={32}
-              height={32}
-            />
+            <img src={logo} alt="TrikClik logo" width={30} height={30} />
           </span>
-          <span className="logo-text">TrikClik</span>
-        </a>
+          <span className="logo-text">TRIKCLIK</span>
+        </Link>
 
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+          <ul className="navbar-nav mx-auto gap-lg-4">
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom active" href="#home" aria-current="page">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("home")}>
                 Home
-              </a>
+              </button>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#about">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("about")}>
                 Meet The Squad
-              </a>
+              </button>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#services">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("services")}>
                 Services
-              </a>
+              </button>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#work">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("work")}>
                 Portfolio
-              </a>
+              </button>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#reviews">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("reviews")}>
                 Reviews
-              </a>
+              </button>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link nav-link-custom" href="#contact">
+              <button className="nav-link nav-link-custom" onClick={() => handleScroll("contact")}>
                 Contact Us
-              </a>
+              </button>
             </li>
+
           </ul>
         </div>
       </div>
