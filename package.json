@@ -2,7 +2,6 @@
   "name": "first_project",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://habibrehman001.github.io/-React-JS",
   "dependencies": {
     "@react-three/fiber": "^9.4.2",
     "@testing-library/dom": "^10.4.1",
