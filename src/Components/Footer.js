@@ -1,11 +1,12 @@
 import React, { memo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 
 const navLinks = [
-  { href: "#home",     label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#work",     label: "Portfolio" },
-  { href: "#contact",  label: "Contact" },
+  { sectionId: "home", label: "Home" },
+  { sectionId: "services", label: "Services" },
+  { sectionId: "work", label: "Portfolio" },
+  { sectionId: "contact", label: "Contact" },
 ];
 
 const socials = [
@@ -33,6 +34,23 @@ const socials = [
 ];
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavClick = (event, sectionId) => {
+    event.preventDefault();
+
+    if (location.pathname === "/") {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+      return;
+    }
+
+    navigate("/", { state: { scrollTo: sectionId } });
+  };
+
   return (
     <footer className="ft-footer" role="contentinfo">
       {/* Top divider glow */}
@@ -54,9 +72,15 @@ const Footer = () => {
         <nav className="ft-nav" aria-label="Footer navigation">
           <span className="ft-col-label">Navigate</span>
           <ul className="ft-nav-list">
-            {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <a href={href} className="ft-nav-link">{label}</a>
+            {navLinks.map(({ sectionId, label }) => (
+              <li key={sectionId}>
+                <a
+                  href={`/#${sectionId}`}
+                  className="ft-nav-link"
+                  onClick={(event) => handleNavClick(event, sectionId)}
+                >
+                  {label}
+                </a>
               </li>
             ))}
           </ul>
@@ -65,8 +89,8 @@ const Footer = () => {
         {/* ── Contact column ── */}
         <div className="ft-contact">
           <span className="ft-col-label">Say Hello</span>
-          <a href="mailto:hello@trikclik.com" className="ft-email">
-          Info@trikclik.com
+          <a href="mailto:Info@trikclik.com" className="ft-email">
+            Info@trikclik.com
           </a>
           <div className="ft-socials" role="list" aria-label="Social media links">
             {socials.map(({ label, href, icon }) => (

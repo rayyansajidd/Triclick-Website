@@ -365,7 +365,7 @@ const AllProjects = () => {
         <div className="ap-hero-inner">
           <Link to="/" className="ap-back">
             ← Back to Home
-          </Link>
+          </Link> <br />
           <span className="ap-eyebrow">Our Work</span>
           <h1 className="ap-hero-title">
             Brands We've

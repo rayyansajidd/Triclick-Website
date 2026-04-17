@@ -19,6 +19,17 @@
     color: var(--ap-text);
     font-family: inherit;
   }
+
+  .ap-page--hidden {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .ap-page--visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
   
   /* ── HERO ── */
   .ap-hero {

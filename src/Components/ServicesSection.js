@@ -51,7 +51,7 @@ const ServiceCard = memo(({ eyebrow, title, desc, img, tag }) => (
 
       <div className="svc-card__body">
         <h3 className="svc-card__title">{title}</h3>
-        <p className="svc-card__desc">{desc}</p>
+        <p style={{paddingBottom: "10px"}} className="svc-card__desc">{desc}</p>
       </div>
     </div>
   </article>

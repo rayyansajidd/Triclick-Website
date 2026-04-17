@@ -1,11 +1,14 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Home.css";
 import logo from "../assets/Logo.png";
+import Loader from "./Loader";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isPortfolioRouting, setIsPortfolioRouting] = useState(false);
+  const portfolioTimerRef = useRef(null);
 
   // 🔥 Smooth scroll handler
   const handleScroll = (id) => {
@@ -22,6 +25,26 @@ const NavBar = () => {
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const handlePortfolioClick = () => {
+    if (isPortfolioRouting) return;
+    setIsPortfolioRouting(true);
+    portfolioTimerRef.current = setTimeout(() => {
+      navigate("/AllProjects", { state: { smoothEntry: true } });
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (portfolioTimerRef.current) {
+        clearTimeout(portfolioTimerRef.current);
+      }
+    };
+  }, []);
+
+  if (isPortfolioRouting) {
+    return <Loader />;
+  }
 
   return (
     <nav className="navbar navbar-expand-lg triklik-navbar">
@@ -66,7 +89,10 @@ const NavBar = () => {
             </li>
 
             <li className="nav-item">
-              <button className="nav-link nav-link-custom" onClick={() => handleScroll("work")}>
+              <button
+                className="nav-link nav-link-custom nav-link-portfolio"
+                onClick={handlePortfolioClick}
+              >
                 Portfolio
               </button>
             </li>
