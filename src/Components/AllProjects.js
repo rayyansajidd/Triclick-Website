@@ -277,55 +277,6 @@ const FeaturedCard = ({ project, index }) => (
   </article>
 );
 
-// ── Client Card (logo-focused, no preview) ──
-const ClientCard = ({ client, index }) => (
-  <article
-    className="ap-client-card"
-    style={{
-      "--accent": client.accent,
-      animationDelay: `${0.3 + index * 0.08}s`,
-    }}
-  >
-    <div className="ap-client-top">
-      <div className="ap-client-logo-wrap">
-        <img
-          src={client.logo}
-          alt={`${client.title} logo`}
-          className="ap-client-logo"
-          loading="lazy"
-        />
-      </div>
-      <a
-        href={client.insta}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="ap-client-insta"
-        aria-label={`Visit ${client.title} on Instagram`}
-      >
-        <InstaIcon />
-      </a>
-    </div>
-
-    <div className="ap-client-body">
-      <span className="ap-category">{client.category}</span>
-      <h3 className="ap-client-title">{client.title}</h3>
-      <p className="ap-client-desc">{client.description}</p>
-
-      <div className="ap-tags">
-        {client.tags.map((t) => (
-          <span className="ap-tag" key={t}>
-            {t}
-          </span>
-        ))}
-      </div>
-    </div>
-
-    <div className="ap-client-arrow">
-      <ArrowIcon />
-    </div>
-  </article>
-);
-
 // ── Page ──
 const AllProjects = () => {
   const navigate = useNavigate();
