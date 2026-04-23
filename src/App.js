@@ -57,7 +57,8 @@ const App = () => {
         easing: "ease-out-cubic",
         once: true,
         offset: 0,
-        disable: prefersCoarsePointer() ? "phone" : false,
+        // Keep AOS active on touch devices; disabling it leaves data-aos elements hidden.
+        disable: false,
       });
     } catch {
       /* Safari / strict environments: never block first paint on AOS */
@@ -75,6 +76,10 @@ const App = () => {
     let cancelled = false;
     let attempts = 0;
     const maxAttempts = 90;
+    const getNavbarOffset = () => {
+      const navbar = document.querySelector(".triklik-navbar");
+      return navbar ? navbar.getBoundingClientRect().height + 8 : 0;
+    };
 
     const clearScrollState = () => {
       navigate("/", { replace: true, state: null });
@@ -85,7 +90,8 @@ const App = () => {
       const section = document.getElementById(scrollTarget);
       if (section) {
         const behavior = prefersReducedScrollMotion() ? "auto" : "smooth";
-        section.scrollIntoView({ behavior, block: "start" });
+        const targetTop = section.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
+        window.scrollTo({ top: Math.max(targetTop, 0), behavior });
         clearScrollState();
         return;
       }

@@ -13,13 +13,45 @@ const NavBar = () => {
 
   const scrollBehavior = prefersReducedScrollMotion() ? "auto" : "smooth";
 
+  const getNavbarOffset = () => {
+    const navbar = document.querySelector(".triklik-navbar");
+    return navbar ? navbar.getBoundingClientRect().height + 8 : 0;
+  };
+
+  const closeMobileMenu = () => {
+    const collapseEl = document.getElementById("navbarSupportedContent");
+    const toggler = document.querySelector(".navbar-toggler");
+    if (collapseEl?.classList.contains("show")) {
+      collapseEl.classList.remove("show");
+      toggler?.setAttribute("aria-expanded", "false");
+    }
+  };
+
+  const scrollToSection = (el) => {
+    const targetTop = el.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
+    window.scrollTo({ top: Math.max(targetTop, 0), behavior: scrollBehavior });
+  };
+
   const handleScroll = (id) => {
     if (location.pathname !== "/") {
       navigate("/", { state: { scrollTo: id } });
       return;
     }
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+    closeMobileMenu();
+    let attempts = 0;
+    const maxAttempts = 90;
+    const tick = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        scrollToSection(el);
+        return;
+      }
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        window.requestAnimationFrame(tick);
+      }
+    };
+    window.requestAnimationFrame(tick);
   };
 
   const portfolioDelayMs = prefersCoarsePointer() ? 0 : 2000;
@@ -80,7 +112,7 @@ const NavBar = () => {
 
             <li className="nav-item">
               <button className="nav-link nav-link-custom" onClick={() => handleScroll("about")}>
-                Meet The Squad
+                About Us
               </button>
             </li>
 
