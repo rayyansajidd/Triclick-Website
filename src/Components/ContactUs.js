@@ -34,14 +34,42 @@ const ContactUs = () => {
   };
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      setSubmitted(true);
-      setFormData({ name: "", email: "", phone: "", message: "" });
-      setErrors({});
-      setTimeout(() => setSubmitted(false), 5000);
+      setIsSubmitting(true);
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: process.env.REACT_APP_WEB3FORMS_KEY || "YOUR_ACCESS_KEY_HERE",
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setSubmitted(true);
+          setFormData({ name: "", email: "", phone: "", message: "" });
+          setErrors({});
+          setTimeout(() => setSubmitted(false), 5000);
+        } else {
+          console.error("Form submission failed", result);
+        }
+      } catch (error) {
+        console.error("Error submitting form", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -156,8 +184,8 @@ const ContactUs = () => {
             </p>
           )}
 
-          <button type="submit" className="contact-btn" aria-label="Send message">
-            Send message
+          <button type="submit" className="contact-btn" aria-label="Send message" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Send message"}
           </button>
         </form>
       </div>

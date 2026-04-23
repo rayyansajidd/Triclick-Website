@@ -1,8 +1,23 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import "./jest.polyfills";
+import { act, render, screen } from "@testing-library/react";
+import { HelmetProvider } from "react-helmet-async";
+import { MemoryRouter } from "react-router-dom";
+import App from "./App";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("renders main content after the loading screen", async () => {
+  jest.useFakeTimers();
+
+  render(
+    <HelmetProvider>
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    </HelmetProvider>
+  );
+
+  await act(async () => {
+    jest.advanceTimersByTime(3000);
+  });
+
+  expect(screen.getByText(/skip to main content/i)).toBeInTheDocument();
 });

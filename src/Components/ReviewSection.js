@@ -1,38 +1,67 @@
 import React, { memo } from "react";
-import "../styles/Home.css";
-import reviewImg from "../assets/dummy";
+import "../styles/Home.css";  
+import reviewImg from "../assets/dummy.png";
+
+const stats = [
+  { value: "4.9", label: "Average Rating" },
+  { value: "500+", label: "Happy Clients" },
+  { value: "98%", label: "Retention Rate" },
+];
 
 const ReviewSection = () => {
   return (
-    <section className="review-section" id="reviews" aria-labelledby="reviews-heading">
-      <article className="review-content">
-        <h2 id="reviews-heading">
-          Why Clients <span>Love Us</span>
-        </h2>
+    <section className="rs-section" id="reviews" aria-labelledby="rs-heading">
+      <div className="rs-inner">
+        <div className="rs-content">
+          <span className="rs-eyebrow">Client Love</span>
 
-        <p>
-          Trusted by hundreds of businesses worldwide for creative design, branding, and
-          high-converting digital experiences.
-        </p>
+          <h2 id="rs-heading" className="rs-heading">
+            Why Businesses
+            <span className="rs-heading-accent"> Trust Us</span>
+          </h2>
 
-        <div className="review-actions">
-          <a href="#contact" className="review-btn" aria-label="Book now through the contact section">
-            Book Now
-          </a>
-          <span className="review-trust">⭐ 4.9 Rating · 500+ Clients</span>
+          <p className="rs-body">
+            Trusted by hundreds of businesses worldwide for creative design, branding,
+            and high-converting digital experiences that actually deliver results.
+          </p>
+
+          <div className="rs-stats" role="list">
+            {stats.map(({ value, label }) => (
+              <div className="rs-stat" role="listitem" key={label}>
+                <span className="rs-stat-value">{value}</span>
+                <span className="rs-stat-label">{label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="rs-actions">
+            <a
+              href="#contact"
+              className="rs-btn-primary"
+              aria-label="Book a session via the contact section"
+            >
+              Book a Session
+            </a>
+            <a href="#work" className="rs-btn-ghost">
+              See Our Work
+            </a>
+          </div>
         </div>
-      </article>
 
-      <div className="review-image">
-        <img
-          src={reviewImg}
-          alt="Illustration of satisfied clients celebrating project success"
-          loading="lazy"
-          decoding="async"
-          width={420}
-          height={420}
-        />
-        <div className="review-glow" aria-hidden="true" />
+        <div className="rs-visual" aria-hidden="true">
+          <div className="rs-img-wrap">
+            <div className="rs-glow" />
+            <img
+              src={reviewImg}
+              alt="Satisfied clients celebrating project success"
+              loading="lazy"
+              decoding="async"
+              width={460}
+              height={460}
+              className="rs-img"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

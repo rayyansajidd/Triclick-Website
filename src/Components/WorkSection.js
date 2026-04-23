@@ -1,156 +1,188 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import "../styles/Home.css";
-import img from "../assets/ph5.png";
-import img1 from "../assets/Latte.png";
-import img2 from "../assets/Lazy6.png";
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
+import { prefersCoarsePointer } from "../utils/device";
+import { FEATURED } from "../data/portfolioFeatured";
 
-const SLIDES = [
-  {
-    id: 1,
-    image: img,
-    title: "PH5 Coffee Shop",
-  },
-  {
-    id: 2,
-    image: img1,
-    title: "Latte Coffees Campaign",
-  },
-  {
-    id: 3,
-    image: img2,
-    title: "Lazy6 Clothing",
-  },
-];
+const SLIDES = FEATURED.map((p, i) => ({
+  id: i + 1,
+  image: p.preview,
+  title: p.title,
+  category: p.tags[0] || p.category,
+}));
+const TOTAL    = SLIDES.length;
+const INTERVAL = 2000;
 
+/* ── Dots ───────────────────────────────────────────────────── */
+const Dots = memo(({ current, onSelect }) => (
+  <div className="wk-dots" role="tablist" aria-label="Select slide">
+    {SLIDES.map((s, i) => (
+      <button
+      key={s.id}
+      type="button"
+      role="tab"
+      aria-selected={i === current}
+      aria-label={s.title}
+      className={`wk-dot${i === current ? " active" : ""}`}
+      onClick={() => onSelect(i)}
+      />
+    ))}
+  </div>
+));
+
+/* ── Arrow — rendered but hidden on mobile via CSS ──────────── */
+const NavBtn = memo(({ dir, onClick }) => (
+  <button
+  type="button"
+  className={`wk-nav wk-nav--${dir}`}
+  onClick={onClick}
+  aria-label={dir === "prev" ? "Previous project" : "Next project"}
+  >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      {dir === "prev"
+        ? <path d="M12 3L6 9l6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        : <path d="M6 3l6 6-6 6"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+      }
+    </svg>
+  </button>
+));
+
+/* ── Main ───────────────────────────────────────────────────── */
 const WorkSection = () => {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(new Set([0]));
+  /** Eager indices — avoids iOS Safari missing Image() onload leaving slides stuck on skeleton. */
+  const [paused,  setPaused]  = useState(false);
+  const [isRouting, setIsRouting] = useState(false);
+  const routeTimerRef = useRef(null);
+
+  /* Auto-advance (desktop pauses on hover; mobile never pauses) */
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setCurrent(p => (p + 1) % TOTAL), INTERVAL);
+    return () => clearInterval(id);
+  }, [paused]);
+
+  const goNext = useCallback(() => setCurrent(p => (p + 1) % TOTAL), []);
+  const goPrev = useCallback(() => setCurrent(p => (p - 1 + TOTAL) % TOTAL), []);
+  const routeDelayMs = prefersCoarsePointer() ? 0 : 2000;
+
+  const gotoall = () => {
+    if (isRouting) return;
+    if (routeDelayMs === 0) {
+      navigate("/AllProjects");
+      return;
+    }
+    setIsRouting(true);
+    routeTimerRef.current = setTimeout(() => {
+      navigate("/AllProjects");
+    }, routeDelayMs);
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % SLIDES.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    return () => {
+      if (routeTimerRef.current) {
+        clearTimeout(routeTimerRef.current);
+      }
+    };
   }, []);
 
-  useEffect(() => {
-    const nextIndex = (current + 1) % SLIDES.length;
-    if (!loadedImages.has(nextIndex)) {
-      const preloadImage = new Image();
-      preloadImage.src = SLIDES[nextIndex].image;
-      preloadImage.onload = () => {
-        setLoadedImages((prev) => new Set([...prev, nextIndex]));
-      };
-    }
-  }, [current, loadedImages]);
-
-  const goNext = () => setCurrent((prev) => (prev + 1) % SLIDES.length);
-  const goPrev = () => setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  if (isRouting) {
+    return (
+      <section id="work" className="wk-section" aria-labelledby="wk-heading">
+        <div className="wk-section-loader">
+          <Loader />
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section id="work" className="work-section" aria-labelledby="work-heading">
-      <div className="container-fluid work-inner">
-        <div className="row g-0 align-items-center">
-          <article className="col-12 col-lg-5">
-            <div className="work-copy">
-              <h2 className="work-heading" id="work-heading">
-                JUST SOME
-                <br />
-                OF OUR
-                <br />
-                <span className="work-heading-em">WORK..</span>
-              </h2>
+    <section id="work" className="wk-section" aria-labelledby="wk-heading">
+      <div className="wk-inner">
 
-              <p className="work-description">
-                Step into the world of bold ideas and scroll-stopping stories. From national TVCs and
-                digital launches to wild social campaigns, our portfolio shows how we turn brands into
-                experiences people remember.
-              </p>
-              <p className="work-description">
-                Explore the projects to see how we mix strategy, design, and production to create work
-                that actually performs.
-              </p>
+        {/* ── Copy ── */}
+        <div className="wk-copy">
+          <p className="wk-eyebrow">Our Portfolio</p>
 
-              <button className="btn work-btn" type="button" aria-label="View all projects">
-                VIEW ALL PROJECTS
-              </button>
-            </div>
-          </article>
+          <h2 className="wk-heading" id="wk-heading">
+            Just some<br />
+            of our <span className="wk-heading__em">work.</span>
+          </h2>
 
-          <div className="col-12 col-lg-7">
-            <div className="work-slider" aria-label="Portfolio highlights carousel">
-              <div className="work-slide-window">
-                {SLIDES.map((slide, index) => (
-                  <article
-                    key={slide.id}
-                    className={`work-slide ${index === current ? "active" : ""}`}
-                    aria-hidden={index !== current}
-                  >
-                    {loadedImages.has(index) ? (
-                      <img
-                        src={slide.image}
-                        alt={`${slide.title} project preview`}
-                        loading={index === 0 ? "eager" : "lazy"}
-                        decoding="async"
-                        width={500}
-                        height={650}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "500px",
-                          height: "650px",
-                          backgroundColor: "#f0f0f0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        role="status"
-                        aria-live="polite"
-                      >
-                        Loading...
-                      </div>
-                    )}
-                    <div className="work-slide-caption">
-                      <h3>{slide.title}</h3>
-                    </div>
-                  </article>
-                ))}
-              </div>
+          <p className="wk-desc">
+            Bold ideas and scroll-stopping stories. From national campaigns and
+            digital launches to immersive brand experiences — our portfolio shows
+            how we turn brands into things people remember.
+          </p>
+          <p className="wk-desc">
+            Strategy, design, and production working in lockstep to create work
+            that actually performs.
+          </p>
 
-              <button
-                className="work-nav-btn work-nav-left"
-                type="button"
-                onClick={goPrev}
-                aria-label="Show previous project"
-              >
-                ‹
-              </button>
-              <button
-                className="work-nav-btn work-nav-right"
-                type="button"
-                onClick={goNext}
-                aria-label="Show next project"
-              >
-                ›
-              </button>
+          <button type="button" onClick={gotoall} className="wk-btn" aria-label="View all projects">
+            View All Projects
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
 
-              <div className="work-dots" role="tablist" aria-label="Carousel slide selectors">
-                {SLIDES.map((slide, index) => (
-                  <button
-                    key={slide.id}
-                    type="button"
-                    className={`work-dot ${index === current ? "active" : ""}`}
-                    onClick={() => setCurrent(index)}
-                    aria-label={`Show ${slide.title}`}
-                    aria-selected={index === current}
-                    role="tab"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+          <p className="wk-counter" aria-live="polite" aria-atomic="true">
+            <span className="wk-counter__cur">{String(current + 1).padStart(2, "0")}</span>
+            <span className="wk-counter__sep"> / </span>
+            <span className="wk-counter__tot">{String(TOTAL).padStart(2, "0")}</span>
+          </p>
         </div>
+
+        {/* ── Slider ── */}
+        <div
+          className="wk-slider"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          aria-label="Portfolio carousel"
+        >
+          {/* Progress bar */}
+          <div className="wk-progress" aria-hidden="true">
+            <div
+              key={current}
+              className="wk-progress__bar"
+              style={{ animationDuration: paused ? "0s" : `${INTERVAL}ms` }}
+            />
+          </div>
+
+          {/* Slides */}
+          <div className="wk-window">
+            {SLIDES.map((slide, i) => (
+              <article
+                key={slide.id}
+                className={`wk-slide${i === current ? " active" : ""}`}
+                aria-hidden={i !== current}
+              >
+                <img
+                  src={slide.image}
+                  alt={`${slide.title} project`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+
+                <div className="wk-caption">
+                  <span className="wk-caption__cat">{slide.category}</span>
+                  <span className="wk-caption__title">{slide.title}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Arrows — display:none on mobile */}
+          <NavBtn dir="prev" onClick={goPrev} />
+          <NavBtn dir="next" onClick={goNext} />
+
+          {/* Dots — always visible */}
+          <Dots current={current} onSelect={setCurrent} />
+        </div>
+
       </div>
     </section>
   );
