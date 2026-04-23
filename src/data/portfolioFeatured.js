@@ -95,12 +95,12 @@ export const FEATURED = [
   },
   {
     id: "f8",
-    title: "WanderLuxe Travels",
+    title: "Musafiraana Travels",
     category: "Travel & Tourism / Luxury",
     description:
       "Captivating destination content and brand storytelling for a premium travel experience company.",
     logo: travles,
-    insta: "https://www.instagram.com/musafiraanatravels?igsh=YzIyazU0M2Uyb2xhs",
+    insta: "https://www.instagram.com/musafiraanatravels/",
     tags: [
       "Travel & Tourism",
       "Wanderlust",
