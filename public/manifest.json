@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TrikClik",
+  "name": "TrikClik — Creative Digital Agency",
+  "description": "Graphic design, web & app development, videography, and campaign storytelling for growth-focused brands.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,18 +9,21 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "web-app-manifest-192x192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo512.png",
+      "src": "web-app-manifest-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0a0a0a",
+  "background_color": "#ffffff",
+  "lang": "en"
 }

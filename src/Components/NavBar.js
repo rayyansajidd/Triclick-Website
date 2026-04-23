@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Home.css";
 import logo from "../assets/Logo.png";
 import Loader from "./Loader";
+import { prefersCoarsePointer, prefersReducedScrollMotion } from "../utils/device";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -10,28 +11,29 @@ const NavBar = () => {
   const [isPortfolioRouting, setIsPortfolioRouting] = useState(false);
   const portfolioTimerRef = useRef(null);
 
-  // 🔥 Smooth scroll handler
+  const scrollBehavior = prefersReducedScrollMotion() ? "auto" : "smooth";
+
   const handleScroll = (id) => {
     if (location.pathname !== "/") {
-      navigate("/"); // go to home first
-
-      // wait for DOM to render then scroll
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    } else {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      navigate("/", { state: { scrollTo: id } });
+      return;
     }
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: scrollBehavior, block: "start" });
   };
+
+  const portfolioDelayMs = prefersCoarsePointer() ? 0 : 2000;
 
   const handlePortfolioClick = () => {
     if (isPortfolioRouting) return;
+    if (portfolioDelayMs === 0) {
+      navigate("/AllProjects", { state: { smoothEntry: true } });
+      return;
+    }
     setIsPortfolioRouting(true);
     portfolioTimerRef.current = setTimeout(() => {
       navigate("/AllProjects", { state: { smoothEntry: true } });
-    }, 2000);
+    }, portfolioDelayMs);
   };
 
   useEffect(() => {

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import "../styles/Home.css";
-import img  from "../assets/ph5.png";
-import img1 from "../assets/Latte.png";
-import img2 from "../assets/Lazy6.png";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
+import { prefersCoarsePointer } from "../utils/device";
+import { FEATURED } from "../data/portfolioFeatured";
 
-const SLIDES = [
-  { id: 1, image: img,  title: "PH5 Coffee Shop",       category: "Branding" },
-  { id: 2, image: img1, title: "Latte Coffees Campaign", category: "Campaign" },
-  { id: 3, image: img2, title: "Lazy6 Clothing",         category: "Fashion"  },
-];
+const SLIDES = FEATURED.map((p, i) => ({
+  id: i + 1,
+  image: p.preview,
+  title: p.title,
+  category: p.tags[0] || p.category,
+}));
 const TOTAL    = SLIDES.length;
 const INTERVAL = 2000;
 
@@ -52,20 +52,10 @@ const NavBtn = memo(({ dir, onClick }) => (
 const WorkSection = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
-  const [loaded,  setLoaded]  = useState(new Set([0]));
+  /** Eager indices — avoids iOS Safari missing Image() onload leaving slides stuck on skeleton. */
   const [paused,  setPaused]  = useState(false);
   const [isRouting, setIsRouting] = useState(false);
   const routeTimerRef = useRef(null);
-
-  /* Preload next image */
-  useEffect(() => {
-    const next = (current + 1) % TOTAL;
-    if (!loaded.has(next)) {
-      const pre = new window.Image();
-      pre.src = SLIDES[next].image;
-      pre.onload = () => setLoaded(p => new Set([...p, next]));
-    }
-  }, [current, loaded]);
 
   /* Auto-advance (desktop pauses on hover; mobile never pauses) */
   useEffect(() => {
@@ -76,12 +66,18 @@ const WorkSection = () => {
 
   const goNext = useCallback(() => setCurrent(p => (p + 1) % TOTAL), []);
   const goPrev = useCallback(() => setCurrent(p => (p - 1 + TOTAL) % TOTAL), []);
+  const routeDelayMs = prefersCoarsePointer() ? 0 : 2000;
+
   const gotoall = () => {
     if (isRouting) return;
+    if (routeDelayMs === 0) {
+      navigate("/AllProjects");
+      return;
+    }
     setIsRouting(true);
     routeTimerRef.current = setTimeout(() => {
       navigate("/AllProjects");
-    }, 2000);
+    }, routeDelayMs);
   };
 
   useEffect(() => {
@@ -164,18 +160,12 @@ const WorkSection = () => {
                 className={`wk-slide${i === current ? " active" : ""}`}
                 aria-hidden={i !== current}
               >
-                {loaded.has(i) ? (
-                  <img
-                    src={slide.image}
-                    alt={`${slide.title} project`}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                  />
-                ) : (
-                  <div className="wk-skeleton" role="status">
-                    <span className="sr-only">Loading…</span>
-                  </div>
-                )}
+                <img
+                  src={slide.image}
+                  alt={`${slide.title} project`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
 
                 <div className="wk-caption">
                   <span className="wk-caption__cat">{slide.category}</span>

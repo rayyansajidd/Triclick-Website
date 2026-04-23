@@ -32,6 +32,21 @@
       "react-app/jest"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js",
+      "^react-router$": "<rootDir>/node_modules/react-router/dist/development/index.js",
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js"
+    }
+  },
+  "overrides": {
+    "@tootallnate/once": "^3.0.1",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.49",
+    "serialize-javascript": "^7.0.5",
+    "underscore": "^1.13.8",
+    "uuid": "^14.0.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
